@@ -3,53 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS Syntax Terminal</title>
+    <title>Ultimate Knowledge Quiz</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="code-bg" id="codeBg"></div>
-    
-    <div class="quiz-container" id="quiz-window">
-        <div class="terminal-header">
-            <div class="circles">
-                <span class="circle red"></span>
-                <span class="circle yellow"></span>
-                <span class="circle green"></span>
-            </div>
-            <div class="terminal-title">bash — javascript-quiz — 80x24</div>
+
+    <div class="quiz-container" id="quiz">
+        <div class="quiz-header">
+            <span id="question-number">Question 1/20</span>
+            <div class="progress-bar"><div id="progress"></div></div>
         </div>
-
-        <div class="stats-bar">
-            <span id="progress">Step: 1/20</span>
-            <span id="timer">Session Active</span>
-        </div>
-
-        <div class="content">
-            <div class="question-container">
-                <p class="prompt"><span>$</span> get-question --current</p>
-                <h2 id="question-text">Initializing...</h2>
-            </div>
-
+        
+        <div id="question-content">
+            <h2 id="question-text">Question loading...</h2>
             <div id="answer-options" class="options-grid">
                 </div>
         </div>
 
-        <div class="controls">
-            <button id="prev-btn" class="nav-btn" disabled>_PREVIOUS</button>
-            <button id="next-btn" class="nav-btn">_NEXT</button>
+        <div class="navigation-controls">
+            <button id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+            <button id="next-btn" onclick="nextQuestion()">Next / Skip</button>
         </div>
     </div>
 
-    <div id="result-screen" class="hide">
-        <div class="quiz-container">
-            <div class="terminal-header">
-                <div class="circles"><span class="circle red"></span></div>
-            </div>
-            <div class="content results">
-                <h1>Compilation Finished!</h1>
-                <p id="score-report"></p>
-                <button class="restart-btn" onclick="location.reload()">Reboot System</button>
-            </div>
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <h2>Quiz Complete!</h2>
+            <p id="score-text"></p>
+            <button onclick="location.reload()">Restart Quiz</button>
         </div>
     </div>
 
