@@ -1,14 +1,14 @@
 :root {
-    --primary: #6366f1;
-    --secondary: #4f46e5;
-    --bg: #0f172a;
-    --text: #f8fafc;
+    --primary: #00ff41; /* Classic Matrix Green */
+    --bg-dark: #0d0208;
+    --card-bg: #1a1a1a;
+    --text: #ffffff;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    background-color: var(--bg-dark);
     color: var(--text);
+    font-family: 'Courier New', Courier, monospace;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,92 +17,98 @@ body {
     overflow: hidden;
 }
 
-.quiz-container {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(10px);
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 600px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+/* Coding Background Animation */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+    opacity: 0.3;
 }
 
-.quiz-header {
-    margin-bottom: 2rem;
+.quiz-container, #result-container {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid var(--primary);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .progress-bar {
-    background: #334155;
+    width: 100%;
     height: 8px;
+    background: #333;
     border-radius: 4px;
-    margin-top: 10px;
+    margin: 15px 0;
 }
 
-#progress {
-    background: var(--primary);
+#bar-fill {
     height: 100%;
+    background: var(--primary);
     width: 5%;
     transition: width 0.3s ease;
-    border-radius: 4px;
 }
 
-.options-grid {
-    display: grid;
-    gap: 1rem;
-    margin: 2rem 0;
+ul { list-style: none; padding: 0; }
+
+li {
+    background: #252525;
+    border: 1px solid #444;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+li:hover {
+    border-color: var(--primary);
+    background: #2a2a2a;
+}
+
+li.selected {
+    background: var(--primary) !important;
+    color: black;
+    font-weight: bold;
+}
+
+.quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
 button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 10px 20px;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-.option-btn {
-    background: #334155;
-    color: white;
-    text-align: left;
-}
-
-.option-btn:hover {
-    background: #475569;
-}
-
-.option-btn.selected {
+button:hover:not(:disabled) {
     background: var(--primary);
+    color: black;
 }
 
-.navigation-controls {
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid #334155;
-    padding-top: 1.5rem;
+button:disabled {
+    border-color: #444;
+    color: #444;
+    cursor: not-allowed;
 }
 
-#prev-btn { background: #64748b; color: white; }
-#next-btn { background: var(--primary); color: white; }
-
-#prev-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-}
-
-.modal-content {
-    background: #1e293b;
-    padding: 3rem;
-    border-radius: 1rem;
-    text-align: center;
-    border: 2px solid var(--primary);
-}
+.hide { display: none; }

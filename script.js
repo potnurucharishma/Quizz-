@@ -1,84 +1,110 @@
-const questions = [
-    { q: "What is the capital of France?", a: ["London", "Berlin", "Paris", "Madrid"], correct: 2 },
-    { q: "Which planet is known as the Red Planet?", a: ["Earth", "Mars", "Jupiter", "Venus"], correct: 1 },
-    { q: "What is 5 + 7?", a: ["10", "11", "12", "13"], correct: 2 },
-    // ... I have added placeholders for 20 questions below
+const quizData = [
+    { q: "Which language runs in a web browser?", a: "Java", b: "C", c: "Python", d: "JavaScript", correct: "d" },
+    { q: "What does CSS stand for?", a: "Central Style Sheets", b: "Cascading Style Sheets", c: "Cascading Simple Sheets", d: "Cars SUVs Sailboats", correct: "b" },
+    { q: "What does HTML stand for?", a: "Hypertext Markup Language", b: "Hypertext Markdown Language", c: "Hyperloop Machine Language", d: "Helicopters Terminals Motorboats", correct: "a" },
+    { q: "Which year was JavaScript launched?", a: "1996", b: "1995", c: "1994", d: "none of the above", correct: "b" },
+    { q: "What is the correct way to write a comments in HTML?", a: "// comment", b: "/* comment */", c: "", d: "<! comment >", correct: "c" },
+    // Adding placeholder questions to reach 20
+    { q: "Which operator is used to assign a value to a variable?", a: "*", b: "x", c: "=", d: "-", correct: "c" },
+    { q: "How do you call a function named 'myFunction'?", a: "call myFunction()", b: "myFunction()", c: "call function myFunction()", d: "hey Function!", correct: "b" },
+    { q: "How to write an IF statement in JavaScript?", a: "if i = 5 then", b: "if i == 5 then", c: "if (i == 5)", d: "if i = 5", correct: "c" },
+    { q: "Which event occurs when the user clicks on an HTML element?", a: "onchange", b: "onclick", c: "onmouseclick", d: "onmouseover", correct: "b" },
+    { q: "How do you declare a JavaScript variable?", a: "v carName", b: "variable carName", c: "var carName", d: "set carName", correct: "c" },
+    { q: "Which company developed JavaScript?", a: "Netscape", b: "Google", c: "Microsoft", d: "Apple", correct: "a" },
+    { q: "Inside which HTML element do we put the JavaScript?", a: "<js>", b: "<scripting>", c: "<script>", d: "<javascript>", correct: "c" },
+    { q: "What is the default value of an uninitialized variable?", a: "0", b: "null", c: "undefined", d: "NaN", correct: "c" },
+    { q: "Which symbol is used for ID in CSS?", a: ".", b: "#", c: "&", d: "*", correct: "b" },
+    { q: "How do you create a function in JavaScript?", a: "function:myFunction()", b: "function myFunction()", c: "function = myFunction()", d: "func myFunction()", correct: "b" },
+    { q: "Is JavaScript case-sensitive?", a: "Yes", b: "No", c: "Only for variables", d: "Depends on browser", correct: "a" },
+    { q: "Which HTML tag is used to define an internal style sheet?", a: "<css>", b: "<style>", d: "<script>", d: "<design>", correct: "b" },
+    { q: "Which property is used to change the background color?", a: "bgcolor", b: "color", c: "background-color", d: "pattern", correct: "c" },
+    { q: "How do you round 7.25 to the nearest integer?", a: "Math.rnd(7.25)", b: "round(7.25)", c: "Math.round(7.25)", d: "rnd(7.25)", correct: "c" },
+    { q: "Which array method adds an element to the end?", a: "pop()", b: "push()", c: "shift()", d: "join()", correct: "b" }
 ];
-
-// Filling up to 20 questions for demonstration
-for (let i = 4; i <= 20; i++) {
-    questions.push({
-        q: `Question ${i}: Who wrote 'Example Book'?`,
-        a: ["Author A", "Author B", "Author C", "Author D"],
-        correct: Math.floor(Math.random() * 4)
-    });
-}
 
 let currentIdx = 0;
 let score = 0;
-let userAnswers = new Array(questions.length).fill(null);
+let userAnswers = new Array(quizData.length).fill(null);
+let timeLeft = 900; // 15 minutes
 
-const questionText = document.getElementById('question-text');
-const optionsContainer = document.getElementById('answer-options');
-const qNumDisplay = document.getElementById('question-number');
-const progressBar = document.getElementById('progress');
-const prevBtn = document.getElementById('prev-btn');
+const questionEl = document.getElementById('question');
+const answerList = document.getElementById('answer-list');
+const progressEl = document.getElementById('progress');
+const timerEl = document.getElementById('timer');
 const nextBtn = document.getElementById('next-btn');
+const prevBtn = document.getElementById('prev-btn');
+const barFill = document.getElementById('bar-fill');
 
-function loadQuestion() {
-    const currentQ = questions[currentIdx];
-    questionText.innerText = currentQ.q;
-    qNumDisplay.innerText = `Question ${currentIdx + 1}/${questions.length}`;
-    progressBar.style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
+function startTimer() {
+    const timerInterval = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        timerEl.innerText = `Time: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showResults();
+        }
+    }, 1000);
+}
+
+function loadQuiz() {
+    const currentQuiz = quizData[currentIdx];
+    questionEl.innerText = currentQuiz.q;
+    answerList.innerHTML = '';
     
-    optionsContainer.innerHTML = '';
-    currentQ.a.forEach((option, i) => {
-        const btn = document.createElement('button');
-        btn.innerText = option;
-        btn.classList.add('option-btn');
-        if (userAnswers[currentIdx] === i) btn.classList.add('selected');
-        btn.onclick = () => selectOption(i);
-        optionsContainer.appendChild(btn);
+    ['a', 'b', 'c', 'd'].forEach(letter => {
+        const li = document.createElement('li');
+        li.innerText = `${letter.toUpperCase()}: ${currentQuiz[letter]}`;
+        if(userAnswers[currentIdx] === letter) li.classList.add('selected');
+        li.onclick = () => selectAnswer(li, letter);
+        answerList.appendChild(li);
     });
 
+    progressEl.innerText = `Question ${currentIdx + 1}/${quizData.length}`;
+    barFill.style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
     prevBtn.disabled = currentIdx === 0;
-    nextBtn.innerText = currentIdx === questions.length - 1 ? "Finish" : "Next / Skip";
+    nextBtn.innerText = currentIdx === quizData.length - 1 ? "Finish" : "Next / Skip";
 }
 
-function selectOption(index) {
-    userAnswers[currentIdx] = index;
-    const buttons = document.querySelectorAll('.option-btn');
-    buttons.forEach(b => b.classList.remove('selected'));
-    buttons[index].classList.add('selected');
+function selectAnswer(el, letter) {
+    const options = document.querySelectorAll('#answer-list li');
+    options.forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+    userAnswers[currentIdx] = letter;
 }
 
-function nextQuestion() {
-    if (currentIdx < questions.length - 1) {
+nextBtn.onclick = () => {
+    if (currentIdx < quizData.length - 1) {
         currentIdx++;
-        loadQuestion();
+        loadQuiz();
     } else {
+        calculateScore();
         showResults();
     }
-}
+};
 
-function prevQuestion() {
+prevBtn.onclick = () => {
     if (currentIdx > 0) {
         currentIdx--;
-        loadQuestion();
+        loadQuiz();
     }
+};
+
+function calculateScore() {
+    score = 0;
+    userAnswers.forEach((ans, i) => {
+        if (ans === quizData[i].correct) score++;
+    });
 }
 
 function showResults() {
-    // Calculate Score
-    score = userAnswers.reduce((acc, answer, idx) => {
-        return answer === questions[idx].correct ? acc + 1 : acc;
-    }, 0);
-
-    const modal = document.getElementById('result-modal');
-    const scoreText = document.getElementById('score-text');
-    scoreText.innerText = `You scored ${score} out of ${questions.length}!`;
-    modal.style.display = 'flex';
+    document.getElementById('quiz').classList.add('hide');
+    const resultContainer = document.getElementById('result-container');
+    resultContainer.classList.remove('hide');
+    document.getElementById('final-score').innerText = `You got ${score} out of ${quizData.length} correct.`;
 }
 
-// Initial Load
-loadQuestion();
+// Init
+startTimer();
+loadQuiz();

@@ -3,35 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Knowledge Quiz</title>
+    <title>DevQuiz | Test Your Logic</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+    <div class="bg-animation"></div>
+    
     <div class="quiz-container" id="quiz">
         <div class="quiz-header">
-            <span id="question-number">Question 1/20</span>
-            <div class="progress-bar"><div id="progress"></div></div>
-        </div>
-        
-        <div id="question-content">
-            <h2 id="question-text">Question loading...</h2>
-            <div id="answer-options" class="options-grid">
-                </div>
+            <div class="stats">
+                <span id="progress">Question 1/20</span>
+                <span id="timer">Time: 15:00</span>
+            </div>
+            <div class="progress-bar"><div id="bar-fill"></div></div>
+            <h2 id="question">Question text goes here...</h2>
         </div>
 
-        <div class="navigation-controls">
-            <button id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
-            <button id="next-btn" onclick="nextQuestion()">Next / Skip</button>
+        <div class="quiz-body">
+            <ul id="answer-list">
+                </ul>
+        </div>
+
+        <div class="quiz-footer">
+            <button id="prev-btn" disabled>Previous</button>
+            <button id="next-btn">Next / Skip</button>
         </div>
     </div>
 
-    <div id="result-modal" class="modal">
-        <div class="modal-content">
-            <h2>Quiz Complete!</h2>
-            <p id="score-text"></p>
-            <button onclick="location.reload()">Restart Quiz</button>
-        </div>
+    <div id="result-container" class="hide">
+        <h2>Quiz Complete!</h2>
+        <p id="final-score"></p>
+        <button onclick="location.reload()">Restart Quiz</button>
     </div>
 
     <script src="script.js"></script>
